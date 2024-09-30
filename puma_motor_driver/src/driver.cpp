@@ -73,6 +73,8 @@ void Driver::processMessage(const can_msgs::msg::Frame::SharedPtr received_msg)
   // If there's no data then this is a request message, jump out.
   if (received_msg->dlc == 0) return;
 
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "processMessage: received message!");
+
   Field* field = nullptr;
   uint32_t received_api = getApi(*received_msg);
   if ((received_api & CAN_MSGID_API_M & CAN_API_MC_CFG) == CAN_API_MC_CFG)
@@ -300,6 +302,8 @@ void Driver::verifyParams()
       }
       else
       {
+        RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Puma Motor Controller on %s (%i): encoder count not set. Set to %i.",
+           device_name_.c_str(), device_number_, encoderCounts());
         // interface_->queue(Message(LM_API_CFG_ENC_LINES | device_number_));
         sendId(LM_API_CFG_ENC_LINES | device_number_);
       }
@@ -313,6 +317,8 @@ void Driver::verifyParams()
       }
       else
       {
+        RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Puma Motor Controller on %s (%i): not in ClosedLoop mode, in mode: %i",
+           device_name_.c_str(), device_number_, lastMode());
         // interface_->queue(Message(LM_API_STATUS_CMODE | device_number_));
         sendId(LM_API_STATUS_CMODE | device_number_);
       }
@@ -343,6 +349,8 @@ void Driver::verifyParams()
       }
       else
       {
+        RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Puma Motor Controller on %s (%i): P gain constant was set to %f and %f was requested.",
+           device_name_.c_str(), device_number_, getP(), gain_p_);
         switch (control_mode_)
         {
           case clearpath_motor_msgs::msg::PumaStatus::MODE_CURRENT:
@@ -397,6 +405,8 @@ void Driver::verifyParams()
       }
       else
       {
+        RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Puma Motor Controller on %s (%i): D gain constant was set to %f and %f was requested.",
+           device_name_.c_str(), device_number_, getD(), gain_d_);
         switch (control_mode_)
         {
           case clearpath_motor_msgs::msg::PumaStatus::MODE_CURRENT:
