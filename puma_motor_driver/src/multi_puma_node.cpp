@@ -96,6 +96,7 @@ MultiPumaNode::MultiPumaNode(const std::string node_name) :
   {
     drivers_.push_back(puma_motor_driver::Driver(
       interface_,
+      node_handle_,
       joint_can_ids_[i],
       joint_names_[i]
     ));

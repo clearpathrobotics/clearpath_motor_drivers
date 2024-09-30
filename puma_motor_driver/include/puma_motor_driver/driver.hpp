@@ -41,6 +41,7 @@ class Driver
 {
 public:
   Driver(const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
+    std::shared_ptr<rclcpp::Node> nh,
     const uint8_t& device_number,
     const std::string& device_name);
 
@@ -463,6 +464,7 @@ public:
 
 private:
   std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface_;
+  std::shared_ptr<rclcpp::Node> nh_;
   uint8_t device_number_;
   std::string device_name_;
 

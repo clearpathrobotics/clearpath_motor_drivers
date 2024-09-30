@@ -56,9 +56,10 @@ namespace ConfigurationStates
 typedef ConfigurationStates::ConfigurationState ConfigurationState;
 
 Driver::Driver(const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
+  std::shared_ptr<rclcpp::Node> nh,
   const uint8_t& device_number,
   const std::string& device_name)
-  : interface_(interface), device_number_(device_number), device_name_(device_name),
+  : interface_(interface), nh_(nh), device_number_(device_number), device_name_(device_name),
     configured_(false), state_(ConfigurationState::Initializing), control_mode_(clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED),
     gain_p_(1), gain_i_(0), gain_d_(0), encoder_cpr_(1), gear_ratio_(1)
   {
@@ -175,8 +176,8 @@ can_msgs::msg::Frame Driver::getMsg(const uint32_t id)
   msg.id = id;
   msg.dlc = 0;
   msg.is_extended = true;
-  // msg.header.stamp = nh_->get_clock()->now();
-  // msg.header.frame_id = "base_link";
+  msg.header.stamp = nh_->get_clock()->now();
+  msg.header.frame_id = "base_link";
   return msg;
 }
 
