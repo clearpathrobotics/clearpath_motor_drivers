@@ -133,6 +133,7 @@ private:
   std::vector<int64_t> joint_can_ids_;
   std::vector<int64_t> joint_directions_;
 
+  can_msgs::msg::Frame::SharedPtr recv_msg_;
   clearpath_motor_msgs::msg::PumaMultiStatus status_msg_;
   clearpath_motor_msgs::msg::PumaMultiFeedback feedback_msg_;
 

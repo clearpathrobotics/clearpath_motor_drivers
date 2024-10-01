@@ -102,6 +102,7 @@ MultiPumaNode::MultiPumaNode(const std::string node_name) :
     ));
   }
 
+  recv_msg_.reset(new can_msgs::msg::Frame());
   feedback_msg_.drivers_feedback.resize(drivers_.size());
   status_msg_.drivers.resize(drivers_.size());
 
@@ -259,30 +260,8 @@ bool MultiPumaNode::areAllActive()
   return true;
 }
 
-// bool MultiPumaNode::connectIfNotConnected()
-// {
-//   if (!gateway_->isConnected())
-//   {
-//     if (!gateway_->connect())
-//     {
-//       RCLCPP_ERROR(this->get_logger(), "Error connecting to motor driver gateway. Retrying in 1 second.");
-//       return false;
-//     }
-//     else
-//     {
-//       RCLCPP_INFO(this->get_logger(), "Connection to motor driver gateway successful.");
-//     }
-//   }
-//   return true;
-// }
-
 void MultiPumaNode::run()
 {
-  // if (!connectIfNotConnected())
-  // {
-  //   return;
-  // }
-
   if (active_)
   {
     // Checks to see if power flag has been reset for each driver
@@ -315,12 +294,11 @@ void MultiPumaNode::run()
   }
 
   // Process all received messages through the connected driver instances.
-  can_msgs::msg::Frame::SharedPtr recv_msg;
-  while (interface_->recv(recv_msg))
+  while (interface_->recv(recv_msg_))
   {
     for (auto& driver : drivers_)
     {
-      driver.processMessage(recv_msg);
+      driver.processMessage(recv_msg_);
     }
   }
 
@@ -339,8 +317,7 @@ void MultiPumaNode::run()
     active_ = true;
     RCLCPP_INFO(this->get_logger(), "All controllers active.");
   }
-  // Send the broadcast heartbeat message.
-  // gateway_.heartbeat();
+  // Broadcast feedback and status messages
   if (active_)
   {
     publishFeedback();
@@ -358,11 +335,7 @@ int main(int argc, char * argv[])
   std::shared_ptr<MultiPumaNode> multi_puma_node =
     std::make_shared<MultiPumaNode>("multi_puma_node");
 
-  // std::shared_ptr<puma_motor_driver::PumaMotorDriverDiagnosticUpdater> puma_motor_driver_diagnostic_updater =
-  // std::make_shared<puma_motor_driver::PumaMotorDriverDiagnosticUpdater>("puma_motor_driver_diagnostic_updater");
-
   exe.add_node(multi_puma_node);
-  // exe.add_node(puma_motor_driver_diagnostic_updater);
   exe.spin();
 
   rclcpp::shutdown();
