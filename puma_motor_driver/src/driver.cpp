@@ -73,8 +73,6 @@ void Driver::processMessage(const can_msgs::msg::Frame::SharedPtr received_msg)
   // If there's no data then this is a request message, jump out.
   if (received_msg->dlc == 0) return;
 
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "processMessage: received message!");
-
   Field* field = nullptr;
   uint32_t received_api = getApi(*received_msg);
   if ((received_api & CAN_MSGID_API_M & CAN_API_MC_CFG) == CAN_API_MC_CFG)
@@ -263,7 +261,6 @@ void Driver::verifyParams()
       }
       else
       {
-        // interface_->queue(Message(LM_API_STATUS_POWER | device_number_));
         sendId(LM_API_STATUS_POWER | device_number_);
       }
       break;
@@ -276,7 +273,6 @@ void Driver::verifyParams()
       }
       else
       {
-        // interface_->queue(Message(LM_API_POS_REF | device_number_));
         sendId(LM_API_POS_REF | device_number_);
       }
       break;
@@ -289,7 +285,6 @@ void Driver::verifyParams()
       }
       else
       {
-        // interface_->queue(Message(LM_API_SPD_REF | device_number_));
         sendId(LM_API_SPD_REF | device_number_);
       }
       break;
@@ -302,9 +297,6 @@ void Driver::verifyParams()
       }
       else
       {
-        RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Puma Motor Controller on %s (%i): encoder count not set. Set to %i.",
-           device_name_.c_str(), device_number_, encoderCounts());
-        // interface_->queue(Message(LM_API_CFG_ENC_LINES | device_number_));
         sendId(LM_API_CFG_ENC_LINES | device_number_);
       }
       break;
@@ -317,9 +309,6 @@ void Driver::verifyParams()
       }
       else
       {
-        RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Puma Motor Controller on %s (%i): not in ClosedLoop mode, in mode: %i",
-           device_name_.c_str(), device_number_, lastMode());
-        // interface_->queue(Message(LM_API_STATUS_CMODE | device_number_));
         sendId(LM_API_STATUS_CMODE | device_number_);
       }
       break;
@@ -354,15 +343,12 @@ void Driver::verifyParams()
         switch (control_mode_)
         {
           case clearpath_motor_msgs::msg::PumaStatus::MODE_CURRENT:
-            // interface_->queue(Message(LM_API_ICTRL_PC | device_number_));
             sendId(LM_API_ICTRL_PC | device_number_);
             break;
           case clearpath_motor_msgs::msg::PumaStatus::MODE_POSITION:
-            // interface_->queue(Message(LM_API_POS_PC | device_number_));
             sendId(LM_API_POS_PC | device_number_);
             break;
           case clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED:
-            // interface_->queue(Message(LM_API_SPD_PC | device_number_));
             sendId(LM_API_SPD_PC | device_number_);
             break;
         }
@@ -382,15 +368,12 @@ void Driver::verifyParams()
         switch (control_mode_)
         {
           case clearpath_motor_msgs::msg::PumaStatus::MODE_CURRENT:
-            // interface_->queue(Message(LM_API_ICTRL_IC | device_number_));
             sendId(LM_API_ICTRL_IC | device_number_);
             break;
           case clearpath_motor_msgs::msg::PumaStatus::MODE_POSITION:
-            // interface_->queue(Message(LM_API_POS_IC | device_number_));
             sendId(LM_API_POS_IC | device_number_);
             break;
           case clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED:
-            // interface_->queue(Message(LM_API_SPD_IC | device_number_));
             sendId(LM_API_SPD_IC | device_number_);
             break;
         }
@@ -410,15 +393,12 @@ void Driver::verifyParams()
         switch (control_mode_)
         {
           case clearpath_motor_msgs::msg::PumaStatus::MODE_CURRENT:
-            // interface_->queue(Message(LM_API_ICTRL_DC | device_number_));
             sendId(LM_API_ICTRL_DC | device_number_);
             break;
           case clearpath_motor_msgs::msg::PumaStatus::MODE_POSITION:
-            // interface_->queue(Message(LM_API_POS_DC | device_number_));
             sendId(LM_API_POS_DC | device_number_);
             break;
           case clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED:
-            // interface_->queue(Message(LM_API_SPD_DC | device_number_));
             sendId(LM_API_SPD_DC | device_number_);
             break;
         }
@@ -451,26 +431,21 @@ void Driver::configureParams()
       sendUint16((LM_API_CFG_ENC_LINES | device_number_), encoder_cpr_);
       break;
     case ConfigurationState::ClosedLoop:  // Need to enter a close loop mode to record encoder data.
-      // interface_->queue(Message(LM_API_SPD_EN | device_number_));
       sendId(LM_API_SPD_EN | device_number_);
       break;
     case ConfigurationState::ControlMode:
       switch (control_mode_)
       {
         case clearpath_motor_msgs::msg::PumaStatus::MODE_VOLTAGE:
-          // interface_->queue(Message(LM_API_VOLT_EN | device_number_));
           sendId(LM_API_VOLT_EN | device_number_);
           break;
         case clearpath_motor_msgs::msg::PumaStatus::MODE_CURRENT:
-          // interface_->queue(Message(LM_API_ICTRL_EN | device_number_));
           sendId(LM_API_ICTRL_EN | device_number_);
           break;
         case clearpath_motor_msgs::msg::PumaStatus::MODE_POSITION:
-          // interface_->queue(Message(LM_API_POS_EN | device_number_));
           sendId(LM_API_POS_EN | device_number_);
           break;
         case clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED:
-          // interface_->queue(Message(LM_API_SPD_EN | device_number_));
           sendId(LM_API_SPD_EN | device_number_);
           break;
       }
@@ -599,17 +574,11 @@ void Driver::clearMsgCache()
 
 void Driver::requestStatusMessages()
 {
-  // interface_->queue(Message(LM_API_STATUS_POWER   | device_number_));
   sendId(LM_API_STATUS_POWER   | device_number_);
 }
 
 void Driver::requestFeedbackMessages()
 {
-  // interface_->queue(Message(LM_API_STATUS_VOLTOUT | device_number_));
-  // interface_->queue(Message(LM_API_STATUS_CURRENT | device_number_));
-  // interface_->queue(Message(LM_API_STATUS_POS     | device_number_));
-  // interface_->queue(Message(LM_API_STATUS_SPD     | device_number_));
-  // interface_->queue(Message(LM_API_SPD_SET        | device_number_));
   sendId(LM_API_STATUS_VOLTOUT | device_number_);
   sendId(LM_API_STATUS_CURRENT | device_number_);
   sendId(LM_API_STATUS_POS     | device_number_);
@@ -618,31 +587,26 @@ void Driver::requestFeedbackMessages()
 }
 void Driver::requestFeedbackDutyCycle()
 {
-  // interface_->queue(Message(LM_API_STATUS_VOLTOUT | device_number_));
   sendId(LM_API_STATUS_VOLTOUT | device_number_);
 }
 
 void Driver::requestFeedbackCurrent()
 {
-  // interface_->queue(Message(LM_API_STATUS_CURRENT | device_number_));
   sendId(LM_API_STATUS_CURRENT | device_number_);
 }
 
 void Driver::requestFeedbackPosition()
 {
-  // interface_->queue(Message(LM_API_STATUS_POS | device_number_));
   sendId(LM_API_STATUS_POS | device_number_);
 }
 
 void Driver::requestFeedbackSpeed()
 {
-  // interface_->queue(Message(LM_API_STATUS_SPD | device_number_));
   sendId(LM_API_STATUS_SPD | device_number_);
 }
 
 void Driver::requestFeedbackPowerState()
 {
-  // interface_->queue(Message(LM_API_STATUS_POWER | device_number_));
   sendId(LM_API_STATUS_POWER | device_number_);
 }
 
@@ -651,19 +615,15 @@ void Driver::requestFeedbackSetpoint()
   switch (control_mode_)
   {
     case clearpath_motor_msgs::msg::PumaStatus::MODE_CURRENT:
-      // interface_->queue(Message(LM_API_ICTRL_SET | device_number_));
       sendId(LM_API_ICTRL_SET | device_number_);
       break;
     case clearpath_motor_msgs::msg::PumaStatus::MODE_POSITION:
-      // interface_->queue(Message(LM_API_POS_SET | device_number_));
       sendId(LM_API_POS_SET | device_number_);
       break;
     case clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED:
-      // interface_->queue(Message(LM_API_SPD_SET | device_number_));
       sendId(LM_API_SPD_SET | device_number_);
       break;
     case clearpath_motor_msgs::msg::PumaStatus::MODE_VOLTAGE:
-      // interface_->queue(Message(LM_API_VOLT_SET | device_number_));
       sendId(LM_API_VOLT_SET | device_number_);
       break;
   };
