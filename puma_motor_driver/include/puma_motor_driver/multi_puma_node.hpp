@@ -38,33 +38,35 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 #include "puma_motor_driver/driver.hpp"
 // #include "puma_motor_driver/diagnostic_updater.hpp"
 
-namespace FeedbackBit{
-  enum
-  {
-    DutyCycle,
-    Current,
-    Position,
-    Speed,
-    Setpoint,
-    Count,
-  };
+namespace FeedbackBit
+{
+enum
+{
+  DutyCycle,
+  Current,
+  Position,
+  Speed,
+  Setpoint,
+  Count,
 };
+}
 
-namespace StatusBit{
-  enum
-  {
-    BusVoltage,
-    OutVoltage,
-    AnalogInput,
-    Temperature,
-    Mode,
-    Fault,
-    Count,
-  };
+namespace StatusBit
+{
+enum
+{
+  BusVoltage,
+  OutVoltage,
+  AnalogInput,
+  Temperature,
+  Mode,
+  Fault,
+  Count,
 };
+}
 
 class MultiPumaNode
-: public rclcpp::Node
+  : public rclcpp::Node
 {
 public:
   MultiPumaNode(const std::string node_name);

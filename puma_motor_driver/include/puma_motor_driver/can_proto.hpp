@@ -130,8 +130,7 @@
 // The Stellaris Motor Class Control Voltage API definitions.
 //
 //*****************************************************************************
-#define LM_API_VOLT             (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_VOLTAGE)
+#define LM_API_VOLT             (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_VOLTAGE)
 #define LM_API_VOLT_EN          (LM_API_VOLT | (0 << CAN_MSGID_API_S))
 #define LM_API_VOLT_DIS         (LM_API_VOLT | (1 << CAN_MSGID_API_S))
 #define LM_API_VOLT_SET         (LM_API_VOLT | (2 << CAN_MSGID_API_S))
@@ -157,8 +156,7 @@
 // The Stellaris Motor Class Speed Control API definitions.
 //
 //*****************************************************************************
-#define LM_API_SPD              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_SPD)
+#define LM_API_SPD              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_SPD)
 #define LM_API_SPD_EN           (LM_API_SPD | (0 << CAN_MSGID_API_S))
 #define LM_API_SPD_DIS          (LM_API_SPD | (1 << CAN_MSGID_API_S))
 #define LM_API_SPD_SET          (LM_API_SPD | (2 << CAN_MSGID_API_S))
@@ -173,8 +171,7 @@
 // The Stellaris Motor Control Voltage Compensation Control API definitions.
 //
 //*****************************************************************************
-#define LM_API_VCOMP            (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_VCOMP)
+#define LM_API_VCOMP            (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_VCOMP)
 #define LM_API_VCOMP_EN         (LM_API_VCOMP | (0 << CAN_MSGID_API_S))
 #define LM_API_VCOMP_DIS        (LM_API_VCOMP | (1 << CAN_MSGID_API_S))
 #define LM_API_VCOMP_SET        (LM_API_VCOMP | (2 << CAN_MSGID_API_S))
@@ -187,8 +184,7 @@
 // The Stellaris Motor Class Position Control API definitions.
 //
 //*****************************************************************************
-#define LM_API_POS              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_POS)
+#define LM_API_POS              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_POS)
 #define LM_API_POS_EN           (LM_API_POS | (0 << CAN_MSGID_API_S))
 #define LM_API_POS_DIS          (LM_API_POS | (1 << CAN_MSGID_API_S))
 #define LM_API_POS_SET          (LM_API_POS | (2 << CAN_MSGID_API_S))
@@ -203,8 +199,7 @@
 // The Stellaris Motor Class Current Control API definitions.
 //
 //*****************************************************************************
-#define LM_API_ICTRL            (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_ICTRL)
+#define LM_API_ICTRL            (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_ICTRL)
 #define LM_API_ICTRL_EN         (LM_API_ICTRL | (0 << CAN_MSGID_API_S))
 #define LM_API_ICTRL_DIS        (LM_API_ICTRL | (1 << CAN_MSGID_API_S))
 #define LM_API_ICTRL_SET        (LM_API_ICTRL | (2 << CAN_MSGID_API_S))
@@ -232,8 +227,7 @@
 // The Stellaris Motor Class Status API definitions.
 //
 //*****************************************************************************
-#define LM_API_STATUS           (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_STATUS)
+#define LM_API_STATUS           (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_STATUS)
 #define LM_API_STATUS_VOLTOUT   (LM_API_STATUS | (0 << CAN_MSGID_API_S))
 #define LM_API_STATUS_VOLTBUS   (LM_API_STATUS | (1 << CAN_MSGID_API_S))
 #define LM_API_STATUS_CURRENT   (LM_API_STATUS | (2 << CAN_MSGID_API_S))
@@ -274,8 +268,7 @@
 // The Stellaris Motor Class Configuration API definitions.
 //
 //*****************************************************************************
-#define LM_API_CFG              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_CFG)
+#define LM_API_CFG              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_CFG)
 #define LM_API_CFG_NUM_BRUSHES  (LM_API_CFG | (0 << CAN_MSGID_API_S))
 #define LM_API_CFG_ENC_LINES    (LM_API_CFG | (1 << CAN_MSGID_API_S))
 #define LM_API_CFG_POT_TURNS    (LM_API_CFG | (2 << CAN_MSGID_API_S))
@@ -298,8 +291,7 @@
 // The Stellaris ACK API definition.
 //
 //*****************************************************************************
-#define LM_API_ACK              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_ACK)
+#define LM_API_ACK              (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_ACK)
 
 //*****************************************************************************
 //
@@ -350,8 +342,7 @@
 // The Stellaris Motor Class Periodic Status API definitions.
 //
 //*****************************************************************************
-#define LM_API_PSTAT            (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR |   \
-                                 CAN_API_MC_PSTAT)
+#define LM_API_PSTAT            (CAN_MSGID_MFR_LM | CAN_MSGID_DTYPE_MOTOR | CAN_API_MC_PSTAT)
 #define LM_API_PSTAT_PER_EN_S0  (LM_API_PSTAT | (0 << CAN_MSGID_API_S))
 #define LM_API_PSTAT_PER_EN_S1  (LM_API_PSTAT | (1 << CAN_MSGID_API_S))
 #define LM_API_PSTAT_PER_EN_S2  (LM_API_PSTAT | (2 << CAN_MSGID_API_S))
@@ -372,39 +363,37 @@
 // little-endian, therefore B0 is the least significant byte.
 //
 //*****************************************************************************
-#define LM_PSTAT_END            0
-#define LM_PSTAT_VOLTOUT_B0     1
-#define LM_PSTAT_VOLTOUT_B1     2
-#define LM_PSTAT_VOLTBUS_B0     3
-#define LM_PSTAT_VOLTBUS_B1     4
-#define LM_PSTAT_CURRENT_B0     5
-#define LM_PSTAT_CURRENT_B1     6
-#define LM_PSTAT_TEMP_B0        7
-#define LM_PSTAT_TEMP_B1        8
-#define LM_PSTAT_POS_B0         9
-#define LM_PSTAT_POS_B1         10
-#define LM_PSTAT_POS_B2         11
-#define LM_PSTAT_POS_B3         12
-#define LM_PSTAT_SPD_B0         13
-#define LM_PSTAT_SPD_B1         14
-#define LM_PSTAT_SPD_B2         15
-#define LM_PSTAT_SPD_B3         16
-#define LM_PSTAT_LIMIT_NCLR     17
-#define LM_PSTAT_LIMIT_CLR      18
-#define LM_PSTAT_FAULT          19
-#define LM_PSTAT_STKY_FLT_NCLR  20
-#define LM_PSTAT_STKY_FLT_CLR   21
-#define LM_PSTAT_VOUT_B0        22
-#define LM_PSTAT_VOUT_B1        23
-#define LM_PSTAT_FLT_COUNT_CURRENT \
-                                24
-#define LM_PSTAT_FLT_COUNT_TEMP 25
-#define LM_PSTAT_FLT_COUNT_VOLTBUS \
-                                26
-#define LM_PSTAT_FLT_COUNT_GATE 27
-#define LM_PSTAT_FLT_COUNT_COMM 28
-#define LM_PSTAT_CANSTS         29
-#define LM_PSTAT_CANERR_B0      30
-#define LM_PSTAT_CANERR_B1      31
+#define LM_PSTAT_END                0
+#define LM_PSTAT_VOLTOUT_B0         1
+#define LM_PSTAT_VOLTOUT_B1         2
+#define LM_PSTAT_VOLTBUS_B0         3
+#define LM_PSTAT_VOLTBUS_B1         4
+#define LM_PSTAT_CURRENT_B0         5
+#define LM_PSTAT_CURRENT_B1         6
+#define LM_PSTAT_TEMP_B0            7
+#define LM_PSTAT_TEMP_B1            8
+#define LM_PSTAT_POS_B0             9
+#define LM_PSTAT_POS_B1             10
+#define LM_PSTAT_POS_B2             11
+#define LM_PSTAT_POS_B3             12
+#define LM_PSTAT_SPD_B0             13
+#define LM_PSTAT_SPD_B1             14
+#define LM_PSTAT_SPD_B2             15
+#define LM_PSTAT_SPD_B3             16
+#define LM_PSTAT_LIMIT_NCLR         17
+#define LM_PSTAT_LIMIT_CLR          18
+#define LM_PSTAT_FAULT              19
+#define LM_PSTAT_STKY_FLT_NCLR      20
+#define LM_PSTAT_STKY_FLT_CLR       21
+#define LM_PSTAT_VOUT_B0            22
+#define LM_PSTAT_VOUT_B1            23
+#define LM_PSTAT_FLT_COUNT_CURRENT  24
+#define LM_PSTAT_FLT_COUNT_TEMP     25
+#define LM_PSTAT_FLT_COUNT_VOLTBUS  26
+#define LM_PSTAT_FLT_COUNT_GATE     27
+#define LM_PSTAT_FLT_COUNT_COMM     28
+#define LM_PSTAT_CANSTS             29
+#define LM_PSTAT_CANERR_B0          30
+#define LM_PSTAT_CANERR_B1          31
 
 #endif // __CAN_PROTO_H__
