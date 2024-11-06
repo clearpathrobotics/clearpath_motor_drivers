@@ -26,7 +26,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 MultiPumaNode::MultiPumaNode(const std::string node_name)
 :Node(node_name),
   active_(false),
-  Status_count_(0),
+  status_count_(0),
   desired_mode_(clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED)
 {
   // Parameters
