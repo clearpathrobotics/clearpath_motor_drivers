@@ -35,3 +35,4 @@ jobs:
           target-ros2-distro: jazzy
           package-name: |
             puma_motor_driver
+          vcs-repo-file-url: dependencies.repos
