@@ -9,9 +9,10 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>can_msgs</depend>
   <depend>clearpath_motor_msgs</depend>
-  <depend>rclcpp</depend>
   <depend>clearpath_ros2_socketcan_interface</depend>
+  <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
 

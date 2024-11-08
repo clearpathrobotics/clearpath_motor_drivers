@@ -40,10 +40,11 @@ namespace puma_motor_driver
 class Driver
 {
 public:
-  Driver(const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
+  Driver(
+    const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
     std::shared_ptr<rclcpp::Node> nh,
-    const uint8_t& device_number,
-    const std::string& device_name);
+    const uint8_t & device_number,
+    const std::string & device_name);
 
   void processMessage(const can_msgs::msg::Frame::SharedPtr received_msg);
 
@@ -394,21 +395,21 @@ public:
    *
    * @return pointer to raw 4 bytes of the P gain response.
    */
-  uint8_t* getRawP();
+  uint8_t * getRawP();
   /**
    * Process the last received I gain
    * for the current control mode.
    *
    * @return pointer to raw 4 bytes of the I gain response.
    */
-  uint8_t* getRawI();
+  uint8_t * getRawI();
   /**
    * Process the last received I gain
    * for the current control mode.
    *
    * @return pointer to raw 4 bytes of the I gain response.
    */
-  uint8_t* getRawD();
+  uint8_t * getRawD();
   /**
    * Process the last received set-point response
    * in voltage open-loop control.
@@ -438,11 +439,9 @@ public:
    */
   double statusPositionGet();
 
+  std::string deviceName() const {return device_name_;}
 
-
-  std::string deviceName() const { return device_name_; }
-
-  uint8_t deviceNumber() const { return device_number_; }
+  uint8_t deviceNumber() const {return device_number_;}
 
   // Only used internally but is used for testing.
   struct Field
@@ -452,15 +451,14 @@ public:
 
     float interpretFixed8x8()
     {
-      return *(reinterpret_cast<int16_t*>(data)) / static_cast<float>(1<<8);
+      return *(reinterpret_cast<int16_t *>(data)) / static_cast<float>(1 << 8);
     }
 
     double interpretFixed16x16()
     {
-      return *(reinterpret_cast<int32_t*>(data)) / static_cast<double>(1<<16);
+      return *(reinterpret_cast<int32_t *>(data)) / static_cast<double>(1 << 16);
     }
   };
-
 
 private:
   std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface_;
@@ -497,7 +495,7 @@ private:
    *
    * @return boolean if received is equal to expected.
    */
-  bool verifyRaw16x16(const uint8_t* received, const double expected);
+  bool verifyRaw16x16(const uint8_t * received, const double expected);
 
   /**
    * Comparing the raw bytes of the 8x8 fixed-point numbers
@@ -505,7 +503,7 @@ private:
    *
    * @return boolean if received is equal to expected.
    */
-  bool verifyRaw8x8(const uint8_t* received, const float expected);
+  bool verifyRaw8x8(const uint8_t * received, const float expected);
 
   Field voltage_fields_[4];
   Field spd_fields_[7];
@@ -515,13 +513,13 @@ private:
   Field status_fields_[15];
   Field cfg_fields_[15];
 
-  Field* voltageFieldForMessage(uint32_t api);
-  Field* spdFieldForMessage(uint32_t api);
-  Field* vcompFieldForMessage(uint32_t api);
-  Field* posFieldForMessage(uint32_t api);
-  Field* ictrlFieldForMessage(uint32_t api);
-  Field* statusFieldForMessage(uint32_t api);
-  Field* cfgFieldForMessage(uint32_t api);
+  Field * voltageFieldForMessage(uint32_t api);
+  Field * spdFieldForMessage(uint32_t api);
+  Field * vcompFieldForMessage(uint32_t api);
+  Field * posFieldForMessage(uint32_t api);
+  Field * ictrlFieldForMessage(uint32_t api);
+  Field * statusFieldForMessage(uint32_t api);
+  Field * cfgFieldForMessage(uint32_t api);
 };
 
 }  // namespace puma_motor_driver
