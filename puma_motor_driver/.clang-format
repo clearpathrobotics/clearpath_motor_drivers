@@ -2,13 +2,12 @@
 BasedOnStyle: Google
 AccessModifierOffset: -2
 ConstructorInitializerIndentWidth: 2
-AlignEscapedNewlinesLeft: false
-AlignTrailingComments: true
 AlignAfterOpenBracket: Align
-AlignConsecutiveAssignments: AcrossEmptyLines
-AlignConsecutiveDeclarations: AcrossEmptyLines
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
 AlignConsecutiveMacros: AcrossEmptyLines
 AlignEscapedNewlines:  LeftWithLastLine
+AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
@@ -18,7 +17,7 @@ AlwaysBreakBeforeMultilineStrings: true
 BreakBeforeBinaryOperators: false
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: true
-BinPackParameters: true
+BinPackParameters: false
 ColumnLimit: 120
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 DerivePointerBinding: false
