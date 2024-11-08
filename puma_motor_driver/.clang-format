@@ -3,10 +3,10 @@ BasedOnStyle: Google
 AccessModifierOffset: -2
 ConstructorInitializerIndentWidth: 2
 AlignAfterOpenBracket: Align
-AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: Consecutive
 AlignConsecutiveMacros: AcrossEmptyLines
-AlignEscapedNewlines:  LeftWithLastLine
+AlignEscapedNewlines:  Left # Revisit when clang-format is updated
 AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: false
@@ -17,7 +17,8 @@ AlwaysBreakBeforeMultilineStrings: true
 BreakBeforeBinaryOperators: false
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: true
-BinPackParameters: OnePerLine
+BinPackArguments: false # Revisit when clang-format is updated
+BinPackParameters: false # Revisit when clang-format is updated
 ColumnLimit: 120
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 DerivePointerBinding: false
