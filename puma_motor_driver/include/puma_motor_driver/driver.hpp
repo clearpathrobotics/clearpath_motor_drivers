@@ -42,7 +42,7 @@ public:
   Driver(const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
          std::shared_ptr<rclcpp::Node> nh, const uint8_t& device_number, const std::string& device_name);
 
-  void processMessage(const can_msgs::msg::Frame::SharedPtr received_msg);
+  void   processMessage(const can_msgs::msg::Frame::SharedPtr received_msg);
 
   double radPerSecToRpm() const;
 
@@ -433,7 +433,7 @@ public:
    *
    * @return value of the set-point response.
    */
-  double statusPositionGet();
+  double      statusPositionGet();
 
   std::string deviceName() const
   {
@@ -449,9 +449,9 @@ public:
   struct Field
   {
     uint8_t data[4];
-    bool received;
+    bool    received;
 
-    float interpretFixed8x8()
+    float   interpretFixed8x8()
     {
       return *(reinterpret_cast<int16_t*>(data)) / static_cast<float>(1 << 8);
     }
@@ -464,32 +464,32 @@ public:
 
 private:
   std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface_;
-  std::shared_ptr<rclcpp::Node> nh_;
-  uint8_t device_number_;
-  std::string device_name_;
+  std::shared_ptr<rclcpp::Node>                                           nh_;
+  uint8_t                                                                 device_number_;
+  std::string                                                             device_name_;
 
-  bool configured_;
-  uint8_t state_;
+  bool                                                                    configured_;
+  uint8_t                                                                 state_;
 
-  uint8_t control_mode_;
-  double gain_p_;
-  double gain_i_;
-  double gain_d_;
-  uint16_t encoder_cpr_;
-  float gear_ratio_;
+  uint8_t                                                                 control_mode_;
+  double                                                                  gain_p_;
+  double                                                                  gain_i_;
+  double                                                                  gain_d_;
+  uint16_t                                                                encoder_cpr_;
+  float                                                                   gear_ratio_;
 
   /**
    * Helpers to generate data for CAN messages.
    */
   can_msgs::msg::Frame::SharedPtr can_msg_;
-  void sendId(const uint32_t id);
-  void sendUint8(const uint32_t id, const uint8_t value);
-  void sendUint16(const uint32_t id, const uint16_t value);
-  void sendFixed8x8(const uint32_t id, const float value);
-  void sendFixed16x16(const uint32_t id, const double value);
-  can_msgs::msg::Frame getMsg(const uint32_t id);
-  uint32_t getApi(const can_msgs::msg::Frame msg);
-  uint32_t getDeviceNumber(const can_msgs::msg::Frame msg);
+  void                            sendId(const uint32_t id);
+  void                            sendUint8(const uint32_t id, const uint8_t value);
+  void                            sendUint16(const uint32_t id, const uint16_t value);
+  void                            sendFixed8x8(const uint32_t id, const float value);
+  void                            sendFixed16x16(const uint32_t id, const double value);
+  can_msgs::msg::Frame            getMsg(const uint32_t id);
+  uint32_t                        getApi(const can_msgs::msg::Frame msg);
+  uint32_t                        getDeviceNumber(const can_msgs::msg::Frame msg);
 
   /**
    * Comparing the raw bytes of the 16x16 fixed-point numbers
@@ -505,15 +505,15 @@ private:
    *
    * @return boolean if received is equal to expected.
    */
-  bool verifyRaw8x8(const uint8_t* received, const float expected);
+  bool   verifyRaw8x8(const uint8_t* received, const float expected);
 
-  Field voltage_fields_[4];
-  Field spd_fields_[7];
-  Field vcomp_fields_[5];
-  Field pos_fields_[7];
-  Field ictrl_fields_[6];
-  Field status_fields_[15];
-  Field cfg_fields_[15];
+  Field  voltage_fields_[4];
+  Field  spd_fields_[7];
+  Field  vcomp_fields_[5];
+  Field  pos_fields_[7];
+  Field  ictrl_fields_[6];
+  Field  status_fields_[15];
+  Field  cfg_fields_[15];
 
   Field* voltageFieldForMessage(uint32_t api);
   Field* spdFieldForMessage(uint32_t api);

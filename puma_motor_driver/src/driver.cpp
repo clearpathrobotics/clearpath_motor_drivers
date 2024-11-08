@@ -87,7 +87,7 @@ void Driver::processMessage(const can_msgs::msg::Frame::SharedPtr received_msg)
     return;
   }
 
-  Field* field = nullptr;
+  Field*   field        = nullptr;
   uint32_t received_api = getApi(*received_msg);
   if ((received_api & CAN_MSGID_API_M & CAN_API_MC_CFG) == CAN_API_MC_CFG)
   {
@@ -142,8 +142,8 @@ void Driver::sendId(const uint32_t id)
 void Driver::sendUint8(const uint32_t id, const uint8_t value)
 {
   can_msgs::msg::Frame msg = getMsg(id);
-  msg.dlc = sizeof(uint8_t);
-  uint8_t data[8] = { 0 };
+  msg.dlc                  = sizeof(uint8_t);
+  uint8_t data[8]          = { 0 };
   std::memcpy(data, &value, sizeof(uint8_t));
   std::copy(std::begin(data), std::end(data), std::begin(msg.data));
 
@@ -153,8 +153,8 @@ void Driver::sendUint8(const uint32_t id, const uint8_t value)
 void Driver::sendUint16(const uint32_t id, const uint16_t value)
 {
   can_msgs::msg::Frame msg = getMsg(id);
-  msg.dlc = sizeof(uint16_t);
-  uint8_t data[8] = { 0 };
+  msg.dlc                  = sizeof(uint16_t);
+  uint8_t data[8]          = { 0 };
   std::memcpy(data, &value, sizeof(uint16_t));
   std::copy(std::begin(data), std::end(data), std::begin(msg.data));
 
@@ -164,10 +164,10 @@ void Driver::sendUint16(const uint32_t id, const uint16_t value)
 void Driver::sendFixed8x8(const uint32_t id, const float value)
 {
   can_msgs::msg::Frame msg = getMsg(id);
-  msg.dlc = sizeof(int16_t);
-  int16_t output_value = static_cast<int16_t>(static_cast<float>(1 << 8) * value);
+  msg.dlc                  = sizeof(int16_t);
+  int16_t output_value     = static_cast<int16_t>(static_cast<float>(1 << 8) * value);
 
-  uint8_t data[8] = { 0 };
+  uint8_t data[8]          = { 0 };
   std::memcpy(data, &output_value, sizeof(int16_t));
   std::copy(std::begin(data), std::end(data), std::begin(msg.data));
 
@@ -177,10 +177,10 @@ void Driver::sendFixed8x8(const uint32_t id, const float value)
 void Driver::sendFixed16x16(const uint32_t id, const double value)
 {
   can_msgs::msg::Frame msg = getMsg(id);
-  msg.dlc = sizeof(int32_t);
-  int32_t output_value = static_cast<int32_t>(static_cast<double>((1 << 16) * value));
+  msg.dlc                  = sizeof(int32_t);
+  int32_t output_value     = static_cast<int32_t>(static_cast<double>((1 << 16) * value));
 
-  uint8_t data[8] = { 0 };
+  uint8_t data[8]          = { 0 };
   std::memcpy(data, &output_value, sizeof(int32_t));
   std::copy(std::begin(data), std::end(data), std::begin(msg.data));
 
@@ -190,10 +190,10 @@ void Driver::sendFixed16x16(const uint32_t id, const double value)
 can_msgs::msg::Frame Driver::getMsg(const uint32_t id)
 {
   can_msgs::msg::Frame msg;
-  msg.id = id;
-  msg.dlc = 0;
-  msg.is_extended = true;
-  msg.header.stamp = nh_->get_clock()->now();
+  msg.id              = id;
+  msg.dlc             = 0;
+  msg.is_extended     = true;
+  msg.header.stamp    = nh_->get_clock()->now();
   msg.header.frame_id = "base_link";
   return msg;
 }
@@ -437,7 +437,7 @@ void Driver::verifyParams()
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Puma Motor Controller on %s (%i): all parameters verified.",
                 device_name_.c_str(), device_number_);
     configured_ = true;
-    state_ = ConfigurationState::Configured;
+    state_      = ConfigurationState::Configured;
   }
 }
 
@@ -663,13 +663,13 @@ void Driver::requestFeedbackSetpoint()
 void Driver::resetConfiguration()
 {
   configured_ = false;
-  state_ = ConfigurationState::Initializing;
+  state_      = ConfigurationState::Initializing;
 }
 
 void Driver::updateGains()
 {
   configured_ = false;
-  state_ = ConfigurationState::PGain;
+  state_      = ConfigurationState::PGain;
 }
 
 bool Driver::receivedDutyCycle()
@@ -786,77 +786,77 @@ bool Driver::receivedPositionSetpoint()
 
 float Driver::lastDutyCycle()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_VOLTOUT)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_VOLTOUT)));
   field->received = false;
   return field->interpretFixed8x8() / 128.0;
 }
 
 float Driver::lastBusVoltage()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_VOLTBUS)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_VOLTBUS)));
   field->received = false;
   return field->interpretFixed8x8();
 }
 
 float Driver::lastCurrent()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_CURRENT)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_CURRENT)));
   field->received = false;
   return field->interpretFixed8x8();
 }
 
 double Driver::lastPosition()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_POS)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_POS)));
   field->received = false;
   return field->interpretFixed16x16() * ((2 * M_PI) / gear_ratio_);  // Convert rev to rad
 }
 
 double Driver::lastSpeed()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_SPD)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_SPD)));
   field->received = false;
   return field->interpretFixed16x16() * ((2 * M_PI) / (gear_ratio_ * 60));  // Convert RPM to rad/s
 }
 
 uint8_t Driver::lastFault()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_FAULT)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_FAULT)));
   field->received = false;
   return field->data[0];
 }
 
 uint8_t Driver::lastPower()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_POWER)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_POWER)));
   field->received = false;
   return field->data[0];
 }
 
 uint8_t Driver::lastMode()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_CMODE)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_CMODE)));
   field->received = false;
   return field->data[0];
 }
 
 float Driver::lastOutVoltage()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_VOUT)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_VOUT)));
   field->received = false;
   return field->interpretFixed8x8();
 }
 
 float Driver::lastTemperature()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_TEMP)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(LM_API_STATUS_TEMP)));
   field->received = false;
   return field->interpretFixed8x8();
 }
 
 float Driver::lastAnalogInput()
 {
-  Field* field = statusFieldForMessage(getApi(getMsg(CPR_API_STATUS_ANALOG)));
+  Field* field    = statusFieldForMessage(getApi(getMsg(CPR_API_STATUS_ANALOG)));
   field->received = false;
   return field->interpretFixed8x8();
 }
@@ -884,28 +884,28 @@ double Driver::lastSetpoint()
 }
 double Driver::statusSpeedGet()
 {
-  Field* field = spdFieldForMessage(getApi(getMsg(LM_API_SPD_SET)));
+  Field* field    = spdFieldForMessage(getApi(getMsg(LM_API_SPD_SET)));
   field->received = false;
   return field->interpretFixed16x16() * ((2 * M_PI) / (gear_ratio_ * 60));  // Convert RPM to rad/s
 }
 
 float Driver::statusDutyCycleGet()
 {
-  Field* field = voltageFieldForMessage(getApi(getMsg(LM_API_VOLT_SET)));
+  Field* field    = voltageFieldForMessage(getApi(getMsg(LM_API_VOLT_SET)));
   field->received = false;
   return field->interpretFixed8x8() / 128.0;
 }
 
 float Driver::statusCurrentGet()
 {
-  Field* field = ictrlFieldForMessage(getApi(getMsg(LM_API_ICTRL_SET)));
+  Field* field    = ictrlFieldForMessage(getApi(getMsg(LM_API_ICTRL_SET)));
   field->received = false;
   return field->interpretFixed8x8();
 }
 
 double Driver::statusPositionGet()
 {
-  Field* field = posFieldForMessage(getApi(getMsg(LM_API_POS_SET)));
+  Field* field    = posFieldForMessage(getApi(getMsg(LM_API_POS_SET)));
   field->received = false;
   return field->interpretFixed16x16() * ((2 * M_PI) / gear_ratio_);  // Convert rev to rad
 }

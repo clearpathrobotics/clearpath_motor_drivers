@@ -117,33 +117,33 @@ public:
   void run();
 
 private:
-  std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface_;
-  std::vector<puma_motor_driver::Driver> drivers_;
+  std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface>    interface_;
+  std::vector<puma_motor_driver::Driver>                                     drivers_;
 
-  bool active_;
-  double gear_ratio_;
-  int encoder_cpr_;
-  int freq_;
-  uint8_t status_count_;
-  uint8_t desired_mode_;
-  std::string canbus_dev_;
-  std::vector<std::string> joint_names_;
-  std::vector<int64_t> joint_can_ids_;
-  std::vector<int64_t> joint_directions_;
+  bool                                                                       active_;
+  double                                                                     gear_ratio_;
+  int                                                                        encoder_cpr_;
+  int                                                                        freq_;
+  uint8_t                                                                    status_count_;
+  uint8_t                                                                    desired_mode_;
+  std::string                                                                canbus_dev_;
+  std::vector<std::string>                                                   joint_names_;
+  std::vector<int64_t>                                                       joint_can_ids_;
+  std::vector<int64_t>                                                       joint_directions_;
 
-  can_msgs::msg::Frame::SharedPtr recv_msg_;
-  clearpath_motor_msgs::msg::PumaMultiStatus status_msg_;
-  clearpath_motor_msgs::msg::PumaMultiFeedback feedback_msg_;
+  can_msgs::msg::Frame::SharedPtr                                            recv_msg_;
+  clearpath_motor_msgs::msg::PumaMultiStatus                                 status_msg_;
+  clearpath_motor_msgs::msg::PumaMultiFeedback                               feedback_msg_;
 
-  double gain_p_;
-  double gain_i_;
-  double gain_d_;
+  double                                                                     gain_p_;
+  double                                                                     gain_i_;
+  double                                                                     gain_d_;
 
-  rclcpp::Node::SharedPtr node_handle_;
-  rclcpp::Publisher<clearpath_motor_msgs::msg::PumaMultiStatus>::SharedPtr status_pub_;
+  rclcpp::Node::SharedPtr                                                    node_handle_;
+  rclcpp::Publisher<clearpath_motor_msgs::msg::PumaMultiStatus>::SharedPtr   status_pub_;
   rclcpp::Publisher<clearpath_motor_msgs::msg::PumaMultiFeedback>::SharedPtr feedback_pub_;
-  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr cmd_sub_;
-  rclcpp::TimerBase::SharedPtr run_timer_;
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr              cmd_sub_;
+  rclcpp::TimerBase::SharedPtr                                               run_timer_;
 };
 
 #endif  // PUMA_MOTOR_DRIVER_PUMA_NODE_H
