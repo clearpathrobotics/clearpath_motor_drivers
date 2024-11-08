@@ -24,10 +24,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 #include "puma_motor_driver/multi_puma_node.hpp"
 
 MultiPumaNode::MultiPumaNode(const std::string node_name)
-:Node(node_name),
-  active_(false),
-  status_count_(0),
-  desired_mode_(clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED)
+  : Node(node_name), active_(false), status_count_(0), desired_mode_(clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED)
 {
   // Parameters
   this->declare_parameter("canbus_dev", "vcan0");
@@ -52,55 +49,36 @@ MultiPumaNode::MultiPumaNode(const std::string node_name)
   joint_directions_ = this->get_parameter("joint_directions").as_integer_array();
   joint_names_ = this->get_parameter("joint_names").as_string_array();
 
-  RCLCPP_INFO(
-    this->get_logger(),
-    "Gear Ratio %f\nEncoder CPR %d\nFrequency %d\nGain PID %f,%f,%f\nCANBus Device %s",
-    gear_ratio_,
-    encoder_cpr_,
-    freq_,
-    gain_p_,
-    gain_i_,
-    gain_d_,
-    canbus_dev_.c_str()
-  );
+  RCLCPP_INFO(this->get_logger(), "Gear Ratio %f\nEncoder CPR %d\nFrequency %d\nGain PID %f,%f,%f\nCANBus Device %s",
+              gear_ratio_, encoder_cpr_, freq_, gain_p_, gain_i_, gain_d_, canbus_dev_.c_str());
 
   // Validate Parameters
-  if (joint_names_.size() != joint_can_ids_.size() ||
-    joint_names_.size() != joint_directions_.size())
+  if (joint_names_.size() != joint_can_ids_.size() || joint_names_.size() != joint_directions_.size())
   {
-    RCLCPP_ERROR(
-      this->get_logger(),
-      "Length of joint_name list must match length of joint_can_ids list and joint_directions list.");
+    RCLCPP_ERROR(this->get_logger(),
+                 "Length of joint_name list must match length of joint_can_ids list and joint_directions list.");
     return;
   }
 
   // Subsciber
   cmd_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-    "platform/puma/cmd",
-    rclcpp::SensorDataQoS(),
-    std::bind(&MultiPumaNode::cmdCallback, this, std::placeholders::_1));
+      "platform/puma/cmd", rclcpp::SensorDataQoS(),
+      std::bind(&MultiPumaNode::cmdCallback, this, std::placeholders::_1));
 
   // Publishers
-  feedback_pub_ = this->create_publisher<clearpath_motor_msgs::msg::PumaMultiFeedback>(
-    "platform/puma/feedback",
-    rclcpp::SensorDataQoS());
-  status_pub_ = this->create_publisher<clearpath_motor_msgs::msg::PumaMultiStatus>(
-    "platform/puma/status",
-    rclcpp::SensorDataQoS());
+  feedback_pub_ = this->create_publisher<clearpath_motor_msgs::msg::PumaMultiFeedback>("platform/puma/feedback",
+                                                                                       rclcpp::SensorDataQoS());
+  status_pub_ = this->create_publisher<clearpath_motor_msgs::msg::PumaMultiStatus>("platform/puma/status",
+                                                                                   rclcpp::SensorDataQoS());
 
-  node_handle_ = std::shared_ptr<rclcpp::Node>(this, [](rclcpp::Node *){});
+  node_handle_ = std::shared_ptr<rclcpp::Node>(this, [](rclcpp::Node*) {});
 
   // Socket
-  interface_.reset(new clearpath_ros2_socketcan_interface::SocketCANInterface(
-    canbus_dev_, node_handle_));
+  interface_.reset(new clearpath_ros2_socketcan_interface::SocketCANInterface(canbus_dev_, node_handle_));
 
-  for (uint8_t i = 0; i < joint_names_.size(); i++) {
-    drivers_.push_back(puma_motor_driver::Driver(
-      interface_,
-      node_handle_,
-      joint_can_ids_[i],
-      joint_names_[i]
-    ));
+  for (uint8_t i = 0; i < joint_names_.size(); i++)
+  {
+    drivers_.push_back(puma_motor_driver::Driver(interface_, node_handle_, joint_can_ids_[i], joint_names_[i]));
   }
 
   recv_msg_.reset(new can_msgs::msg::Frame());
@@ -108,7 +86,8 @@ MultiPumaNode::MultiPumaNode(const std::string node_name)
   status_msg_.drivers.resize(drivers_.size());
 
   uint8_t i = 0;
-  for (auto & driver : drivers_) {
+  for (auto& driver : drivers_)
+  {
     driver.clearMsgCache();
     driver.setEncoderCPR(encoder_cpr_);
     driver.setGearRatio(gear_ratio_ * joint_directions_[i]);
@@ -116,15 +95,15 @@ MultiPumaNode::MultiPumaNode(const std::string node_name)
     i++;
   }
 
-  run_timer_ = this->create_wall_timer(
-    std::chrono::milliseconds(1000 / freq_), std::bind(&MultiPumaNode::run, this));
+  run_timer_ = this->create_wall_timer(std::chrono::milliseconds(1000 / freq_), std::bind(&MultiPumaNode::run, this));
 }
 
 bool MultiPumaNode::getFeedback()
 {
   // Check All Fields Received
   uint8_t received = 0;
-  for (auto & driver : drivers_) {
+  for (auto& driver : drivers_)
+  {
     received |= driver.receivedDutyCycle() << FeedbackBit::DutyCycle;
     received |= driver.receivedCurrent() << FeedbackBit::Current;
     received |= driver.receivedPosition() << FeedbackBit::Position;
@@ -132,13 +111,15 @@ bool MultiPumaNode::getFeedback()
     received |= driver.receivedSetpoint() << FeedbackBit::Setpoint;
   }
 
-  if (received != (1 << FeedbackBit::Count) - 1) {
+  if (received != (1 << FeedbackBit::Count) - 1)
+  {
     return false;
   }
 
   uint8_t feedback_index = 0;
-  for (auto & driver : drivers_) {
-    clearpath_motor_msgs::msg::PumaFeedback * f = &feedback_msg_.drivers_feedback[feedback_index];
+  for (auto& driver : drivers_)
+  {
+    clearpath_motor_msgs::msg::PumaFeedback* f = &feedback_msg_.drivers_feedback[feedback_index];
     f->device_number = driver.deviceNumber();
     f->device_name = driver.deviceName();
     f->duty_cycle = driver.lastDutyCycle();
@@ -159,7 +140,8 @@ bool MultiPumaNode::getStatus()
   uint8_t status_index = 0;
   uint8_t received_fields = 0;
   uint8_t received_status = 0;
-  for (auto & driver : drivers_) {
+  for (auto& driver : drivers_)
+  {
     received_fields |= driver.receivedBusVoltage() << StatusBit::BusVoltage;
     received_fields |= driver.receivedOutVoltage() << StatusBit::OutVoltage;
     received_fields |= driver.receivedAnalogInput() << StatusBit::AnalogInput;
@@ -167,23 +149,28 @@ bool MultiPumaNode::getStatus()
     received_fields |= driver.receivedTemperature() << StatusBit::Temperature;
     received_fields |= driver.receivedMode() << StatusBit::Mode;
     received_fields |= driver.receivedFault() << StatusBit::Fault;
-    if (received_fields != (1 << StatusBit::Count) - 1) {
+    if (received_fields != (1 << StatusBit::Count) - 1)
+    {
       RCLCPP_DEBUG(this->get_logger(), "Received Status Fields %x", received_fields);
-    } else {
+    }
+    else
+    {
       received_status |= 1 << status_index;
     }
     status_index++;
   }
 
-  if (received_status != (1 << status_index) - 1) {
+  if (received_status != (1 << status_index) - 1)
+  {
     RCLCPP_DEBUG(this->get_logger(), "Received Status %x", received_status);
     return false;
   }
 
   // Prepare output status message to ROS.
   status_index = 0;
-  for (auto & driver : drivers_) {
-    clearpath_motor_msgs::msg::PumaStatus * s = &status_msg_.drivers[status_index];
+  for (auto& driver : drivers_)
+  {
+    clearpath_motor_msgs::msg::PumaStatus* s = &status_msg_.drivers[status_index];
     s->device_number = driver.deviceNumber();
     s->device_name = driver.deviceName();
     s->bus_voltage = driver.lastBusVoltage();
@@ -201,27 +188,36 @@ bool MultiPumaNode::getStatus()
 
 void MultiPumaNode::publishFeedback()
 {
-  if (getFeedback()) {
+  if (getFeedback())
+  {
     feedback_pub_->publish(feedback_msg_);
   }
 }
 
 void MultiPumaNode::publishStatus()
 {
-  if (getStatus()) {
+  if (getStatus())
+  {
     status_pub_->publish(status_msg_);
   }
 }
 
 void MultiPumaNode::cmdCallback(const sensor_msgs::msg::JointState::SharedPtr msg)
 {
-  if (active_) {
-    for (auto & driver : drivers_) {
-      for (int i = 0; i < static_cast<int>(msg->name.size()); i++) {
-        if (driver.deviceName() == msg->name[i]) {
-          if (desired_mode_ == clearpath_motor_msgs::msg::PumaStatus::MODE_VOLTAGE) {
+  if (active_)
+  {
+    for (auto& driver : drivers_)
+    {
+      for (int i = 0; i < static_cast<int>(msg->name.size()); i++)
+      {
+        if (driver.deviceName() == msg->name[i])
+        {
+          if (desired_mode_ == clearpath_motor_msgs::msg::PumaStatus::MODE_VOLTAGE)
+          {
             driver.commandDutyCycle(msg->velocity[i]);
-          } else if (desired_mode_ == clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED) {
+          }
+          else if (desired_mode_ == clearpath_motor_msgs::msg::PumaStatus::MODE_SPEED)
+          {
             driver.commandSpeed(msg->velocity[i]);
           }
         }
@@ -232,8 +228,10 @@ void MultiPumaNode::cmdCallback(const sensor_msgs::msg::JointState::SharedPtr ms
 
 bool MultiPumaNode::areAllActive()
 {
-  for (auto & driver : drivers_) {
-    if (!driver.isConfigured()) {
+  for (auto& driver : drivers_)
+  {
+    if (!driver.isConfigured())
+    {
       return false;
     }
   }
@@ -242,66 +240,78 @@ bool MultiPumaNode::areAllActive()
 
 void MultiPumaNode::run()
 {
-  if (active_) {
+  if (active_)
+  {
     // Checks to see if power flag has been reset for each driver
-    for (auto & driver : drivers_) {
-      if (driver.lastPower() != 0) {
+    for (auto& driver : drivers_)
+    {
+      if (driver.lastPower() != 0)
+      {
         active_ = false;
-        RCLCPP_WARN(this->get_logger(),
-          "Power reset detected on device ID %d, will reconfigure all drivers.",
-          driver.deviceNumber());
-        for (auto & driver : drivers_) {
+        RCLCPP_WARN(this->get_logger(), "Power reset detected on device ID %d, will reconfigure all drivers.",
+                    driver.deviceNumber());
+        for (auto& driver : drivers_)
+        {
           driver.resetConfiguration();
         }
       }
     }
     // Queue data requests for the drivers in order to assemble an amalgamated status message.
-    for (auto & driver : drivers_) {
+    for (auto& driver : drivers_)
+    {
       driver.requestStatusMessages();
       driver.requestFeedbackSetpoint();
     }
-  } else {
+  }
+  else
+  {
     // Set parameters for each driver.
-    for (auto & driver : drivers_) {
+    for (auto& driver : drivers_)
+    {
       driver.configureParams();
     }
   }
 
   // Process all received messages through the connected driver instances.
-  while (interface_->recv(recv_msg_)) {
-    for (auto & driver : drivers_) {
+  while (interface_->recv(recv_msg_))
+  {
+    for (auto& driver : drivers_)
+    {
       driver.processMessage(recv_msg_);
     }
   }
 
   // Check parameters of each driver instance.
-  if (!active_) {
-    for (auto & driver : drivers_) {
+  if (!active_)
+  {
+    for (auto& driver : drivers_)
+    {
       driver.verifyParams();
     }
   }
 
   // Verify that the all drivers are configured.
-  if (areAllActive() == true && active_ == false) {
+  if (areAllActive() == true && active_ == false)
+  {
     active_ = true;
     RCLCPP_INFO(this->get_logger(), "All controllers active.");
   }
   // Broadcast feedback and status messages
-  if (active_) {
+  if (active_)
+  {
     publishFeedback();
     publishStatus();
   }
   status_count_++;
 }
 
-int main(int argc, char * argv[])
+int main(int argc, char* argv[])
 {
   rclcpp::init(argc, argv);
 
   rclcpp::executors::MultiThreadedExecutor exe;
 
-  std::shared_ptr<MultiPumaNode> multi_puma_node =
-    std::make_shared<MultiPumaNode>("multi_puma_node");
+  std::shared_ptr<MultiPumaNode> multi_puma_node = std::make_shared<MultiPumaNode>("multi_puma_node");
 
   exe.add_node(multi_puma_node);
   exe.spin();
