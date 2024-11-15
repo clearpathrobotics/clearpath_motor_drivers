@@ -40,9 +40,9 @@ class Driver
 {
 public:
   Driver(const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
-         std::shared_ptr<rclcpp::Node> nh,
-         const uint8_t& device_number,
-         const std::string& device_name);
+         std::shared_ptr<rclcpp::Node>                                                 nh,
+         const uint8_t&                                                                device_number,
+         const std::string&                                                            device_name);
 
   void processMessage(const can_msgs::msg::Frame::SharedPtr received_msg);
 
@@ -451,7 +451,7 @@ public:
   struct Field
   {
     uint8_t data[4];
-    bool received;
+    bool    received;
 
     float interpretFixed8x8()
     {
@@ -466,32 +466,32 @@ public:
 
 private:
   std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface_;
-  std::shared_ptr<rclcpp::Node> nh_;
-  uint8_t device_number_;
-  std::string device_name_;
+  std::shared_ptr<rclcpp::Node>                                           nh_;
+  uint8_t                                                                 device_number_;
+  std::string                                                             device_name_;
 
-  bool configured_;
+  bool    configured_;
   uint8_t state_;
 
-  uint8_t control_mode_;
-  double gain_p_;
-  double gain_i_;
-  double gain_d_;
+  uint8_t  control_mode_;
+  double   gain_p_;
+  double   gain_i_;
+  double   gain_d_;
   uint16_t encoder_cpr_;
-  float gear_ratio_;
+  float    gear_ratio_;
 
   /**
    * Helpers to generate data for CAN messages.
    */
   can_msgs::msg::Frame::SharedPtr can_msg_;
-  void sendId(const uint32_t id);
-  void sendUint8(const uint32_t id, const uint8_t value);
-  void sendUint16(const uint32_t id, const uint16_t value);
-  void sendFixed8x8(const uint32_t id, const float value);
-  void sendFixed16x16(const uint32_t id, const double value);
-  can_msgs::msg::Frame getMsg(const uint32_t id);
-  uint32_t getApi(const can_msgs::msg::Frame msg);
-  uint32_t getDeviceNumber(const can_msgs::msg::Frame msg);
+  void                            sendId(const uint32_t id);
+  void                            sendUint8(const uint32_t id, const uint8_t value);
+  void                            sendUint16(const uint32_t id, const uint16_t value);
+  void                            sendFixed8x8(const uint32_t id, const float value);
+  void                            sendFixed16x16(const uint32_t id, const double value);
+  can_msgs::msg::Frame            getMsg(const uint32_t id);
+  uint32_t                        getApi(const can_msgs::msg::Frame msg);
+  uint32_t                        getDeviceNumber(const can_msgs::msg::Frame msg);
 
   /**
    * Comparing the raw bytes of the 16x16 fixed-point numbers
