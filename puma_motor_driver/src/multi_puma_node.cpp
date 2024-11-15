@@ -94,6 +94,8 @@ MultiPumaNode::MultiPumaNode(const std::string node_name)
   interface_.reset(new clearpath_ros2_socketcan_interface::SocketCANInterface(
     canbus_dev_, node_handle_));
 
+  interface_->startSendTimer(1);
+
   for (uint8_t i = 0; i < joint_names_.size(); i++) {
     drivers_.push_back(puma_motor_driver::Driver(
       interface_,
