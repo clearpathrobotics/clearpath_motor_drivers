@@ -25,13 +25,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 #define PUMA_MOTOR_DRIVER_DRIVER_H
 
 #include <stdint.h>
+
 #include <string>
 
 #include "can_msgs/msg/frame.hpp"
-#include "clearpath_ros2_socketcan_interface/socketcan_interface.hpp"
-
 #include "clearpath_motor_msgs/msg/puma_status.hpp"
-
+#include "clearpath_ros2_socketcan_interface/socketcan_interface.hpp"
 #include "puma_motor_driver/can_proto.hpp"
 
 namespace puma_motor_driver
@@ -40,11 +39,10 @@ namespace puma_motor_driver
 class Driver
 {
 public:
-  Driver(
-    const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
-    std::shared_ptr<rclcpp::Node> nh,
-    const uint8_t & device_number,
-    const std::string & device_name);
+  Driver(const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface,
+         std::shared_ptr<rclcpp::Node>                                                 nh,
+         const uint8_t&                                                                device_number,
+         const std::string&                                                            device_name);
 
   void processMessage(const can_msgs::msg::Frame::SharedPtr received_msg);
 
@@ -154,73 +152,73 @@ public:
    * Check fault response field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedFault();
   /**
    * Check power field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedPower();
   /**
    * Check mode field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedMode();
   /**
    * Check duty cycle field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedDutyCycle();
   /**
    * Check bus voltage field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedBusVoltage();
   /**
    * Check current field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedCurrent();
   /**
    * Check out voltage field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedOutVoltage();
   /**
    * Check teperature field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedTemperature();
   /**
    * Check analog input field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedAnalogInput();
   /**
    * Check position field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedPosition();
   /**
    * Check speed field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedSpeed();
   /**
    * Check setpoint field was received.
    *
    * @return received flag
-  */
+   */
   bool receivedSetpoint();
   /**
    * Check the set-point response in voltage
@@ -395,21 +393,21 @@ public:
    *
    * @return pointer to raw 4 bytes of the P gain response.
    */
-  uint8_t * getRawP();
+  uint8_t* getRawP();
   /**
    * Process the last received I gain
    * for the current control mode.
    *
    * @return pointer to raw 4 bytes of the I gain response.
    */
-  uint8_t * getRawI();
+  uint8_t* getRawI();
   /**
    * Process the last received I gain
    * for the current control mode.
    *
    * @return pointer to raw 4 bytes of the I gain response.
    */
-  uint8_t * getRawD();
+  uint8_t* getRawD();
   /**
    * Process the last received set-point response
    * in voltage open-loop control.
@@ -439,71 +437,65 @@ public:
    */
   double statusPositionGet();
 
-  std::string deviceName() const {return device_name_;}
+  std::string deviceName() const { return device_name_; }
 
-  uint8_t deviceNumber() const {return device_number_;}
+  uint8_t deviceNumber() const { return device_number_; }
 
   // Only used internally but is used for testing.
   struct Field
   {
     uint8_t data[4];
-    bool received;
+    bool    received;
 
-    float interpretFixed8x8()
-    {
-      return *(reinterpret_cast<int16_t *>(data)) / static_cast<float>(1 << 8);
-    }
+    float interpretFixed8x8() { return *(reinterpret_cast<int16_t*>(data)) / static_cast<float>(1 << 8); }
 
-    double interpretFixed16x16()
-    {
-      return *(reinterpret_cast<int32_t *>(data)) / static_cast<double>(1 << 16);
-    }
+    double interpretFixed16x16() { return *(reinterpret_cast<int32_t*>(data)) / static_cast<double>(1 << 16); }
   };
 
 private:
   std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface_;
-  std::shared_ptr<rclcpp::Node> nh_;
-  uint8_t device_number_;
-  std::string device_name_;
+  std::shared_ptr<rclcpp::Node>                                           nh_;
+  uint8_t                                                                 device_number_;
+  std::string                                                             device_name_;
 
-  bool configured_;
+  bool    configured_;
   uint8_t state_;
 
-  uint8_t control_mode_;
-  double gain_p_;
-  double gain_i_;
-  double gain_d_;
+  uint8_t  control_mode_;
+  double   gain_p_;
+  double   gain_i_;
+  double   gain_d_;
   uint16_t encoder_cpr_;
-  float gear_ratio_;
+  float    gear_ratio_;
 
   /**
    * Helpers to generate data for CAN messages.
    */
   can_msgs::msg::Frame::SharedPtr can_msg_;
-  void sendId(const uint32_t id);
-  void sendUint8(const uint32_t id, const uint8_t value);
-  void sendUint16(const uint32_t id, const uint16_t value);
-  void sendFixed8x8(const uint32_t id, const float value);
-  void sendFixed16x16(const uint32_t id, const double value);
-  can_msgs::msg::Frame getMsg(const uint32_t id);
-  uint32_t getApi(const can_msgs::msg::Frame msg);
-  uint32_t getDeviceNumber(const can_msgs::msg::Frame msg);
+  void                            sendId(const uint32_t id);
+  void                            sendUint8(const uint32_t id, const uint8_t value);
+  void                            sendUint16(const uint32_t id, const uint16_t value);
+  void                            sendFixed8x8(const uint32_t id, const float value);
+  void                            sendFixed16x16(const uint32_t id, const double value);
+  can_msgs::msg::Frame            getMsg(const uint32_t id);
+  uint32_t                        getApi(const can_msgs::msg::Frame msg);
+  uint32_t                        getDeviceNumber(const can_msgs::msg::Frame msg);
 
   /**
    * Comparing the raw bytes of the 16x16 fixed-point numbers
-    * to avoid comparing the floating point values.
+   * to avoid comparing the floating point values.
    *
    * @return boolean if received is equal to expected.
    */
-  bool verifyRaw16x16(const uint8_t * received, const double expected);
+  bool verifyRaw16x16(const uint8_t* received, const double expected);
 
   /**
    * Comparing the raw bytes of the 8x8 fixed-point numbers
-    * to avoid comparing the floating point values.
+   * to avoid comparing the floating point values.
    *
    * @return boolean if received is equal to expected.
    */
-  bool verifyRaw8x8(const uint8_t * received, const float expected);
+  bool verifyRaw8x8(const uint8_t* received, const float expected);
 
   Field voltage_fields_[4];
   Field spd_fields_[7];
@@ -513,13 +505,13 @@ private:
   Field status_fields_[15];
   Field cfg_fields_[15];
 
-  Field * voltageFieldForMessage(uint32_t api);
-  Field * spdFieldForMessage(uint32_t api);
-  Field * vcompFieldForMessage(uint32_t api);
-  Field * posFieldForMessage(uint32_t api);
-  Field * ictrlFieldForMessage(uint32_t api);
-  Field * statusFieldForMessage(uint32_t api);
-  Field * cfgFieldForMessage(uint32_t api);
+  Field* voltageFieldForMessage(uint32_t api);
+  Field* spdFieldForMessage(uint32_t api);
+  Field* vcompFieldForMessage(uint32_t api);
+  Field* posFieldForMessage(uint32_t api);
+  Field* ictrlFieldForMessage(uint32_t api);
+  Field* statusFieldForMessage(uint32_t api);
+  Field* cfgFieldForMessage(uint32_t api);
 };
 
 }  // namespace puma_motor_driver

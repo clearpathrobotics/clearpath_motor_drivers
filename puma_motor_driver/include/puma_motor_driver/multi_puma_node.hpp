@@ -24,18 +24,15 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 #ifndef PUMA_MOTOR_DRIVER_MULTI_PUMA_NODE_H
 #define PUMA_MOTOR_DRIVER_MULTI_PUMA_NODE_H
 
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/float64.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
-
+#include "clearpath_motor_msgs/msg/puma_feedback.hpp"
+#include "clearpath_motor_msgs/msg/puma_multi_feedback.hpp"
 #include "clearpath_motor_msgs/msg/puma_multi_status.hpp"
 #include "clearpath_motor_msgs/msg/puma_status.hpp"
-#include "clearpath_motor_msgs/msg/puma_multi_feedback.hpp"
-#include "clearpath_motor_msgs/msg/puma_feedback.hpp"
-
 #include "clearpath_ros2_socketcan_interface/socketcan_interface.hpp"
-
 #include "puma_motor_driver/driver.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "std_msgs/msg/float64.hpp"
 // #include "puma_motor_driver/diagnostic_updater.hpp"
 
 namespace FeedbackBit
@@ -65,8 +62,7 @@ enum
 };
 }
 
-class MultiPumaNode
-  : public rclcpp::Node
+class MultiPumaNode : public rclcpp::Node
 {
 public:
   MultiPumaNode(const std::string node_name);
@@ -74,42 +70,42 @@ public:
   /**
    * Receives desired motor speeds in sensor_msgs::JointState format and
    * sends commands to each motor over CAN.
-  */
+   */
   void cmdCallback(const sensor_msgs::msg::JointState::SharedPtr msg);
 
   /**
    * Checks if feedback fields have been received from each motor driver.
    * If feedback is avaiable, creates the feedback message and returns
    * true. Otherwise, returns false.
-  */
+   */
   bool getFeedback();
 
   /**
    * Checks if status fields have been received from each motor driver.
    * If status data is available, creates the status message and returns
    * true. Otherwise, returns false.
-  */
+   */
   bool getStatus();
 
   /**
    * If feedback message was created, publishes feedback message.
-  */
+   */
   void publishFeedback();
 
   /**
    * If status message was created, publishes status message.
-  */
+   */
   void publishStatus();
 
   /**
    * Checks that all motor drivers have been configured and are active.
-  */
+   */
   bool areAllActive();
 
   /**
    * Checks if socket connection is active. If not, attempts to establish
    * a connection.
-  */
+   */
   bool connectIfNotConnected();
 
   /**
@@ -117,38 +113,37 @@ public:
    * and reconfigures drivers that have disconnected, verifies parameters
    * are set appropriately, receives motor data, and publishes the feedback
    * and status messages.
-  */
+   */
   void run();
 
 private:
   std::shared_ptr<clearpath_ros2_socketcan_interface::SocketCANInterface> interface_;
-  std::vector<puma_motor_driver::Driver> drivers_;
+  std::vector<puma_motor_driver::Driver>                                  drivers_;
 
-  bool active_;
-  double gear_ratio_;
-  int encoder_cpr_;
-  int freq_;
-  uint8_t status_count_;
-  uint8_t desired_mode_;
-  std::string canbus_dev_;
+  bool                     active_;
+  double                   gear_ratio_;
+  int                      encoder_cpr_;
+  int                      freq_;
+  uint8_t                  status_count_;
+  uint8_t                  desired_mode_;
+  std::string              canbus_dev_;
   std::vector<std::string> joint_names_;
-  std::vector<int64_t> joint_can_ids_;
-  std::vector<int64_t> joint_directions_;
+  std::vector<int64_t>     joint_can_ids_;
+  std::vector<int64_t>     joint_directions_;
 
-  can_msgs::msg::Frame::SharedPtr recv_msg_;
-  clearpath_motor_msgs::msg::PumaMultiStatus status_msg_;
+  can_msgs::msg::Frame::SharedPtr              recv_msg_;
+  clearpath_motor_msgs::msg::PumaMultiStatus   status_msg_;
   clearpath_motor_msgs::msg::PumaMultiFeedback feedback_msg_;
 
   double gain_p_;
   double gain_i_;
   double gain_d_;
 
-  rclcpp::Node::SharedPtr node_handle_;
-  rclcpp::Publisher<clearpath_motor_msgs::msg::PumaMultiStatus>::SharedPtr status_pub_;
+  rclcpp::Node::SharedPtr                                                    node_handle_;
+  rclcpp::Publisher<clearpath_motor_msgs::msg::PumaMultiStatus>::SharedPtr   status_pub_;
   rclcpp::Publisher<clearpath_motor_msgs::msg::PumaMultiFeedback>::SharedPtr feedback_pub_;
-  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr cmd_sub_;
-  rclcpp::TimerBase::SharedPtr run_timer_;
-
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr              cmd_sub_;
+  rclcpp::TimerBase::SharedPtr                                               run_timer_;
 };
 
-#endif // PUMA_MOTOR_DRIVER_PUMA_NODE_H
+#endif  // PUMA_MOTOR_DRIVER_PUMA_NODE_H
