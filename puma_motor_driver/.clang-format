@@ -1,6 +1,7 @@
 ---
 BasedOnStyle: Google
 AccessModifierOffset: -2
+AlignArrayOfStructures: Right
 AlignConsecutiveAssignments:
   Enabled: true
   AlignCompound: true
@@ -14,15 +15,14 @@ AlignConsecutiveMacros:
 AlignTrailingComments:
   OverEmptyLines: 1
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: InlineOnly
 BinPackArguments: false
 BinPackParameters: false
 BraceWrapping:
   AfterCaseLabel: false
   AfterClass: "true"
-  AfterControlStatement: "true"
+  AfterControlStatement: Always
   AfterEnum: "true"
   AfterFunction: "true"
   AfterNamespace: "true"
@@ -35,9 +35,9 @@ BraceWrapping:
   BeforeLambdaBody: false
   BeforeWhile: false
   IndentBraces: "false"
-  SplitEmptyFunction: true
-  SplitEmptyRecord: true
-  SplitEmptyNamespace: true
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
 BreakAfterReturnType: Automatic
 BreakBeforeBinaryOperators: false
 BreakBeforeBraces: Custom
@@ -47,7 +47,8 @@ BreakTemplateDeclarations: MultiLine
 ColumnLimit: 120
 ConstructorInitializerIndentWidth: 2
 Cpp11BracedListStyle: false
-PackConstructorInitializers: NextLine
+DerivePointerAlignment: false
+InsertNewlineAtEOF: true
 PenaltyBreakBeforeFirstCallParameter: 19
 PenaltyBreakComment: 60
 PenaltyBreakFirstLessLess: 1000

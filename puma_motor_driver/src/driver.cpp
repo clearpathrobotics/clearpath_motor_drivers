@@ -72,8 +72,7 @@ Driver::Driver(const std::shared_ptr<clearpath_ros2_socketcan_interface::SocketC
   , gain_d_(0)
   , encoder_cpr_(1)
   , gear_ratio_(1)
-{
-}
+{}
 
 void Driver::processMessage(const can_msgs::msg::Frame::SharedPtr received_msg)
 {

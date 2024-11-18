@@ -437,15 +437,9 @@ public:
    */
   double statusPositionGet();
 
-  std::string deviceName() const
-  {
-    return device_name_;
-  }
+  std::string deviceName() const { return device_name_; }
 
-  uint8_t deviceNumber() const
-  {
-    return device_number_;
-  }
+  uint8_t deviceNumber() const { return device_number_; }
 
   // Only used internally but is used for testing.
   struct Field
@@ -453,15 +447,9 @@ public:
     uint8_t data[4];
     bool    received;
 
-    float interpretFixed8x8()
-    {
-      return *(reinterpret_cast<int16_t*>(data)) / static_cast<float>(1 << 8);
-    }
+    float interpretFixed8x8() { return *(reinterpret_cast<int16_t*>(data)) / static_cast<float>(1 << 8); }
 
-    double interpretFixed16x16()
-    {
-      return *(reinterpret_cast<int32_t*>(data)) / static_cast<double>(1 << 16);
-    }
+    double interpretFixed16x16() { return *(reinterpret_cast<int32_t*>(data)) / static_cast<double>(1 << 16); }
   };
 
 private:
